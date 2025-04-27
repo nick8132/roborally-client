@@ -31,6 +31,7 @@ import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
 import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
 import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.User;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
@@ -40,10 +41,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.web.client.RestClient;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
 
 /**
  * ...
@@ -52,6 +55,8 @@ import java.util.Optional;
  *
  */
 public class AppController implements Observer {
+
+
 
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
 
@@ -179,4 +184,8 @@ public class AppController implements Observer {
         // XXX do nothing for now
     }
 
+    public void signUpUser(String username) {
+    }
 }
+
+

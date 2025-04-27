@@ -22,9 +22,12 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 /**
  * ...
@@ -42,9 +45,12 @@ public class RoboRallyMenuBar extends MenuBar {
 
     private MenuItem newGame;
 
-    private MenuItem selectGame;
-
     private MenuItem loadGame;
+
+    private MenuItem SignIn;
+    private MenuItem SignOut;
+
+    private MenuItem selectGame;
 
     private MenuItem stopGame;
 
@@ -60,9 +66,6 @@ public class RoboRallyMenuBar extends MenuBar {
         newGame.setOnAction( e -> this.appController.newGame());
         controlMenu.getItems().add(newGame);
 
-        selectGame = new MenuItem("Select Online Game");
-        selectGame.setOnAction( e -> this.appController.selectGame());
-        controlMenu.getItems().add(selectGame);
 
         stopGame = new MenuItem("Stop Game");
         stopGame.setOnAction( e -> this.appController.stopGame());
@@ -76,6 +79,15 @@ public class RoboRallyMenuBar extends MenuBar {
         loadGame.setOnAction( e -> this.appController.loadGame());
         controlMenu.getItems().add(loadGame);
 
+        SignIn = new MenuItem("SignIn");
+        SignIn.setOnAction(e -> showSignIpDialog());
+        controlMenu.getItems().add(SignIn);
+
+
+        selectGame = new MenuItem("Select Online Game");
+        selectGame.setOnAction( e -> this.appController.selectGame());
+        controlMenu.getItems().add(selectGame);
+
         exitApp = new MenuItem("Exit");
         exitApp.setOnAction( e -> this.appController.exit());
         controlMenu.getItems().add(exitApp);
@@ -84,6 +96,40 @@ public class RoboRallyMenuBar extends MenuBar {
         controlMenu.setOnShown(e -> this.updateBounds());
         update();
     }
+
+    private void showSignIpDialog(){
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Sign Up");
+
+        Label label = new Label("Sign Up");
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Username");
+
+        Button createButton = new Button("Create");
+        Button cancelButton = new Button("Cancel");
+
+        HBox buttons = new HBox(10, createButton, cancelButton);
+        buttons.setStyle("-fx-alignment: center;");
+
+        VBox layout = new VBox(10, label, usernameField, buttons);
+        layout.setStyle("-fx-padding: 15; -fx-alignment: center;");
+
+        createButton.setOnAction(e -> {
+            String username = usernameField.getText().trim();
+            if (!username.isEmpty()) {
+                appController.signUpUser(username); // Implement this method in your controller
+                dialog.close();
+            } else {
+                usernameField.setStyle("-fx-border-color: red;");
+            }
+        });
+        cancelButton.setOnAction(e -> dialog.close());
+
+        dialog.setScene(new Scene(layout));
+        dialog.showAndWait();
+    }
+
 
     public void update() {
         if (appController.isGameRunning()) {
