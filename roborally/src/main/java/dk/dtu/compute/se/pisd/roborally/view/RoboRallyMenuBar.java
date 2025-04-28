@@ -41,6 +41,7 @@ public class RoboRallyMenuBar extends MenuBar {
     private Menu controlMenu;
     private MenuItem newGame;
     private MenuItem selectGame;
+    private MenuItem signIn;
     private MenuItem stopGame;
     private MenuItem saveGame;
     private MenuItem loadGame;
@@ -60,11 +61,14 @@ public class RoboRallyMenuBar extends MenuBar {
         controlMenu.getItems().add(newGame);
 
         // SignIn and start game (temp, just need to make sure that it works)
-        selectGame = new MenuItem("Select Online Game");
-        selectGame.setOnAction(e -> {
-            System.out.println("Select Online Game clicked");
+        signIn = new MenuItem("Sign In");
+        signIn.setOnAction(e -> {
             onlineController.showSignInDialog(); // Open sign-in dialog
         });
+        controlMenu.getItems().add(signIn);
+
+        selectGame = new MenuItem("Select Online Game");
+        selectGame.setOnAction( e -> this.appController.selectGame());
         controlMenu.getItems().add(selectGame);
 
         // Other MenuItems (Stop Game, Save, Load, Exit)

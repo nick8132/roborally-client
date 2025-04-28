@@ -4,7 +4,10 @@ import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.User;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 public class OnlineController {
 
@@ -32,8 +35,28 @@ public class OnlineController {
         appDialogs.showSignInDialog();
     }
 
+    //Added back things (after making sure teh program isn't breaking, delete note in final )
     public void signIn(String name) {
-        // same as before
+        if (name.length() >= 4) {
+            try {
+                List<User> users = restClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/users/searchusers")  // ⚡ make sure your backend matches this!
+                                .queryParam("name", name)
+                                .build())
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<List<User>>() {});
+
+                if (!users.isEmpty()) {
+                    setOnlineUser(users.get(0));
+                } else {
+                    System.out.println("No user found with name: " + name);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void setOnlineUser(User user) {
