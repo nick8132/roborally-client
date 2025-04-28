@@ -22,6 +22,8 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -33,59 +35,61 @@ import javafx.scene.control.MenuItem;
  *
  */
 public class RoboRallyMenuBar extends MenuBar {
-
     private AppController appController;
+    private OnlineController onlineController;
 
     private Menu controlMenu;
-
-    private MenuItem saveGame;
-
     private MenuItem newGame;
-
     private MenuItem selectGame;
-
-    private MenuItem loadGame;
-
     private MenuItem stopGame;
-
+    private MenuItem saveGame;
+    private MenuItem loadGame;
     private MenuItem exitApp;
 
-    public RoboRallyMenuBar(AppController appController) {
+    public RoboRallyMenuBar(AppController appController, OnlineController onlineController) {
         this.appController = appController;
+        this.onlineController = onlineController;
 
+        // Make the menu show up
         controlMenu = new Menu("File");
         this.getMenus().add(controlMenu);
 
+        // New Game MenuItem
         newGame = new MenuItem("New Game");
-        newGame.setOnAction( e -> this.appController.newGame());
+        newGame.setOnAction(e -> this.appController.newGame());
         controlMenu.getItems().add(newGame);
 
+        // SignIn and start game (temp, just need to make sure that it works)
         selectGame = new MenuItem("Select Online Game");
-        selectGame.setOnAction( e -> this.appController.selectGame());
+        selectGame.setOnAction(e -> {
+            System.out.println("Select Online Game clicked");
+            onlineController.showSignInDialog(); // Open sign-in dialog
+        });
         controlMenu.getItems().add(selectGame);
 
+        // Other MenuItems (Stop Game, Save, Load, Exit)
         stopGame = new MenuItem("Stop Game");
-        stopGame.setOnAction( e -> this.appController.stopGame());
+        stopGame.setOnAction(e -> this.appController.stopGame());
         controlMenu.getItems().add(stopGame);
 
         saveGame = new MenuItem("Save Game");
-        saveGame.setOnAction( e -> this.appController.saveGame());
+        saveGame.setOnAction(e -> this.appController.saveGame());
         controlMenu.getItems().add(saveGame);
 
         loadGame = new MenuItem("Load Game");
-        loadGame.setOnAction( e -> this.appController.loadGame());
+        loadGame.setOnAction(e -> this.appController.loadGame());
         controlMenu.getItems().add(loadGame);
 
         exitApp = new MenuItem("Exit");
-        exitApp.setOnAction( e -> this.appController.exit());
+        exitApp.setOnAction(e -> this.appController.exit());
         controlMenu.getItems().add(exitApp);
 
         controlMenu.setOnShowing(e -> update());
-        controlMenu.setOnShown(e -> this.updateBounds());
         update();
     }
 
     public void update() {
+        // Update visibility based on game state
         if (appController.isGameRunning()) {
             newGame.setVisible(false);
             stopGame.setVisible(true);
@@ -98,5 +102,4 @@ public class RoboRallyMenuBar extends MenuBar {
             loadGame.setVisible(true);
         }
     }
-
 }

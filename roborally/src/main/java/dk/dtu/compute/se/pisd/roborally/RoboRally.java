@@ -23,6 +23,8 @@ package dk.dtu.compute.se.pisd.roborally;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.GameSelection;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
 import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
@@ -44,9 +46,6 @@ public class RoboRally extends Application {
 
     private Stage stage;
     private BorderPane boardRoot;
-    // private RoboRallyMenuBar menuBar;
-
-    // private AppController appController;
 
     @Override
     public void init() throws Exception {
@@ -57,12 +56,15 @@ public class RoboRally extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
 
+        // Initialize controllers
         AppController appController = new AppController(this);
+        OnlineController onlineController = new OnlineController(appController); // Add OnlineController
 
-        // create the primary scene with the a menu bar and a pane for
-        // the board view (which initially is empty); it will be filled
-        // when the user creates a new game or loads a game
-        RoboRallyMenuBar menuBar = new RoboRallyMenuBar(appController);
+        // Initialize dialogs
+        AppDialogs appDialogs = new AppDialogs(onlineController); // Pass OnlineController to AppDialogs
+
+        // Create menu bar and pass OnlineController to it
+        RoboRallyMenuBar menuBar = new RoboRallyMenuBar(appController, onlineController);
         boardRoot = new BorderPane();
         VBox vbox = new VBox(menuBar, boardRoot);
         vbox.setMinWidth(MIN_APP_WIDTH);
@@ -70,10 +72,10 @@ public class RoboRally extends Application {
 
         stage.setScene(primaryScene);
         stage.setTitle("RoboRally");
-        stage.setOnCloseRequest(
-                e -> {
-                    e.consume();
-                    appController.exit();} );
+        stage.setOnCloseRequest(e -> {
+            e.consume();
+            appController.exit();
+        });
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
@@ -96,13 +98,12 @@ public class RoboRally extends Application {
         // if present, remove old BoardView
         boardRoot.getChildren().clear();
 
-
         if (appController != null) {
-            // create and add view for new board
+            // create and add view for new game selection screen
             GameSelection gameSelection = new GameSelection(appController);
             boardRoot.setCenter(gameSelection);
             // width and height should be done in a nicer way
-            // and probably with scrollbar in the respective pane (GamesView)
+            // and probably with a scrollbar in the respective pane (GamesView)
             stage.setMinWidth(500);
             stage.setMinHeight(600);
             stage.setResizable(true);
@@ -113,21 +114,18 @@ public class RoboRally extends Application {
             stage.setResizable(false);
             stage.sizeToScene();
         }
-
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
-
         // XXX just in case we need to do something here eventually;
-        //     but right now the only way for the user to exit the app
-        //     is delegated to the exit() method in the AppController,
-        //     so that the AppController can take care of that.
+        // but right now the only way for the user to exit the app
+        // is delegated to the exit() method in the AppController,
+        // so that the AppController can take care of that.
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 }
