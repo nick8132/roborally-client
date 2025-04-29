@@ -1,6 +1,7 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.model;
 
 public class OnlineState {
+
     /** The User who has successfully signed in */
     private User onlineUser;
 
@@ -26,6 +27,12 @@ public class OnlineState {
 
     public void setSignedIn(boolean signedIn) {
         this.signedIn = signedIn;
+    }
+
+
+    //prep for sign out
+    public void signOut() {
+        setOnlineUser(null);
     }
 
     @Override

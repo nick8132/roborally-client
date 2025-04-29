@@ -49,6 +49,7 @@ public class OnlineController {
 
                 if (!users.isEmpty()) {
                     setOnlineUser(users.get(0));
+                    onlineState.setSignedIn(true);
                 } else {
                     System.out.println("No user found with name: " + name);
                 }
