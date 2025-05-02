@@ -18,7 +18,7 @@ public class OnlineController {
     public OnlineController(AppController appController) {
         this.onlineState = new OnlineState();
         this.restClient = RestClient.builder()
-                .baseUrl("http://localhost:8080/roborally/")
+                .baseUrl("http://localhost:8080")
                 .build();
         this.appDialogs = new AppDialogs(this);
     }
@@ -35,13 +35,12 @@ public class OnlineController {
         appDialogs.showSignInDialog();
     }
 
-    //Added back things (after making sure teh program isn't breaking, delete note in final )
     public void signIn(String name) {
         if (name.length() >= 4) {
             try {
                 List<User> users = restClient.get()
                         .uri(uriBuilder -> uriBuilder
-                                .path("/users/searchusers")  // ⚡ make sure your backend matches this!
+                                .path("/users/searchusers")  // make sure backend matches this
                                 .queryParam("name", name)
                                 .build())
                         .retrieve()
@@ -65,7 +64,6 @@ public class OnlineController {
     }
 
     public void signOut() {
-        this.onlineState.setOnlineUser(null);
-        this.onlineState.setSignedIn(false);
+        onlineState.signOut();
     }
 }

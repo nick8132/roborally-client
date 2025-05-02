@@ -2,10 +2,10 @@ package dk.dtu.compute.se.pisd.roborally.gameselection.model;
 
 public class OnlineState {
 
-    /** The User who has successfully signed in */
+    // User sign in confirm
     private User onlineUser;
 
-    /** Whether the client believes it’s currently “signed in” */
+    // Use for signed in
     private boolean signedIn;
 
     public OnlineState() {
